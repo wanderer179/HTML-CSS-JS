@@ -1,2 +1,2 @@
 # HTML-CSS-JS
-HTML , CSS ,JavaScript files here.
+Basically Add all your files for frontend development
