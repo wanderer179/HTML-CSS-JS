@@ -1,0 +1,182 @@
+//HTML FILE:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+  <title> SNAKE GAME </title>
+  <link rel="stylesheet" type="text/css" href="vssut.css">
+</head>
+	<style type="text/css">
+		#canvas{
+      margin: 29px auto;
+      margin-left: 25%;
+      margin-bottom: 5px;
+      background-color: #0c1021;
+
+      padding: 0px;
+      border: solid 10px slategrey;
+      border-radius: 7px;
+      box-shadow: black 20px;
+		}
+		
+		
+		
+	</style>
+
+<body>
+  <h1>LET'S PLAY SNAKE GAME</h1>
+  
+  <h4>(see the top left corner for the score)</h4>
+
+  <canvas id="canvas" width="700px" height="420px"></canvas>
+  <script type="text/javascript" src="vssut.js">
+  	
+  </script> 	
+  <h3>REMARK:the game will end when the snake will touch the boundary line</h3>
+  
+</body>
+</html>
+
+//CSS FILE:
+
+body{
+    background-color: darkslategray;
+    
+    }
+    
+    h1{
+
+    color: goldenrod;
+    text-decoration-style: double;
+    margin-left: 36.5%;
+    
+    }
+    
+    h4{
+
+    color: lightskyblue;
+    margin-left: 42.5%;
+
+    }
+
+    h3{
+        margin-left: 30%;
+    }
+    
+    //JS FILE:
+    
+    var cvs=document.getElementById("canvas");
+var ctx=cvs.getContext("2d");
+var snakeW=15;
+var snakeH=15;
+var dir="right";
+
+	
+function drawSnake(x,y) {
+	// body...
+	ctx.fillStyle="red";
+    ctx.fillRect(x*snakeW,y*snakeH,snakeW,snakeH)
+    ctx.fillStyle="orange";
+    ctx.strokeRect(x*snakeW,y*snakeH,snakeW,snakeH)
+}
+
+//create snake
+var len=5;
+snake=[];
+for (var i = len-1; i >=0; i--) {
+	snake.push({
+		x:i,
+		y:0
+
+	})
+}
+
+//control direction
+document.addEventListener("keydown",dirContral)
+function dirContral(e){
+	if (e.keyCode==37 && dir!="right") {
+		dir="left";
+	}else if(e.keyCode==38 && dir!="down"){
+		dir="up";
+	}else if(e.keyCode==39 && dir!="left"){
+		dir="right";
+	}else if(e.keyCode==40 && dir!="up"){
+		dir="down";
+	}
+}
+
+//create food
+var food={
+	x:Math.round(Math.random()*(cvs.width/snakeW)+1),
+	y:Math.round(Math.random()*(cvs.height/snakeH)+1)
+
+}
+
+//create the score var
+let score=0;
+
+//draw food
+function drawFood(x,y) {
+	// body...
+
+	ctx.fillStyle="green";
+    ctx.fillRect(x*snakeW,y*snakeH,snakeW,snakeH)
+    ctx.fillStyle="blue";
+    ctx.strokeRect(x*snakeW,y*snakeH,snakeW,snakeH)
+}
+
+//draw function
+function draw(){
+ctx.clearRect(0,0,cvs.width,cvs.height);
+for(var i=0;i<snake.length;i++){
+	var X = snake[i].x;
+	var Y = snake[i].y;
+	drawSnake(X,Y)
+}
+drawFood(food.x,food.y);
+//snake head
+var snakeX = snake[0].x
+var snakeY = snake[0].y
+
+if (snakeX<0||snakeY<0||snakeX>=cvs.width/snakeW||snakeY>=cvs.height/snakeH) {
+	alert("GAME OVER");
+
+}
+
+
+if (dir=="right") {snakeX++}
+else if(dir=="left") {snakeX--}
+else if(dir=="up") {snakeY--}
+else if(dir=="down") {snakeY++}
+
+	if (snakeX==food.x && snakeY==food.y) {
+		score++;
+		food={
+	x:Math.round(Math.random()*(cvs.width/snakeW-1)+1),
+	y:Math.round(Math.random()*(cvs.height/snakeH-1)+1),
+
+             }
+             var newHead={
+             	x:snakeX,
+             	y:snakeY
+             }
+	}else{
+	snake.pop();
+	 var newHead={
+             	x:snakeX,
+             	y:snakeY
+             }
+         }
+
+snake.unshift(newHead);
+
+ctx.fillStyle="white";
+ctx.font="45px Changa one";
+ctx.fillText(score,2*snakeW,4*snakeH);
+
+}//end draw function
+
+
+
+setInterval(draw,100)
